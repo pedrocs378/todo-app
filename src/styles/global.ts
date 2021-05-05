@@ -2,6 +2,7 @@ import { createGlobalStyle } from 'styled-components'
 
 export default createGlobalStyle`
 	:root {
+		--blue: #3a7bfd;
 		--radio-background: linear-gradient(#57ddff, #c058f3);
 	}
 

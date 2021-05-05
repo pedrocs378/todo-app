@@ -10,6 +10,9 @@ import {
 	TitleContainer,
 	Tasks,
 	Task,
+	TasksFooter,
+	TaskFilters,
+	FilterButton,
 } from './styles'
 
 export function Home() {
@@ -38,7 +41,48 @@ export function Home() {
 							<FiX />
 						</button>
 					</Task>
+					<Task htmlFor="task-radio" isSelected={false}>
+						<div>
+							<input type="radio" id="task-radio" />
+							<span>
+								<FaCheck color="#fff" size={9} />
+							</span>
+						</div>
+						Read for 1 hour
+						<button type="button">
+							<FiX />
+						</button>
+					</Task>
+					<Task htmlFor="task-radio" isSelected={false}>
+						<div>
+							<input type="radio" id="task-radio" />
+							<span>
+								<FaCheck color="#fff" size={9} />
+							</span>
+						</div>
+						Pick up graceries
+						<button type="button">
+							<FiX />
+						</button>
+					</Task>
+					<TasksFooter>
+						<p>5 items left</p>
+						<button type="button">
+							Clear Completed
+						</button>
+					</TasksFooter>
 				</Tasks>
+				<TaskFilters>
+					<FilterButton isSelected={true}>
+						All
+					</FilterButton>
+					<FilterButton isSelected={false}>
+						Active
+					</FilterButton>
+					<FilterButton isSelected={false}>
+						Completed
+					</FilterButton>
+				</TaskFilters>
 			</Content>
 		</Container>
 	)
