@@ -30,34 +30,11 @@ interface TaskParams {
 	isCompleted: boolean
 }
 
-const initialTasks = [
-	{
-		id: String(Math.random()),
-		title: 'Read for 1 hour',
-		isCompleted: true,
-	},
-	{
-		id: String(Math.random()),
-		title: 'Pick up graceries',
-		isCompleted: false,
-	},
-	{
-		id: String(Math.random()),
-		title: '10 minutes meditation',
-		isCompleted: true,
-	},
-	{
-		id: String(Math.random()),
-		title: 'Study React',
-		isCompleted: false,
-	},
-]
-
 export function Home() {
 	const { title: themeTitle } = useContext(ThemeContext)
 	const { toggleTheme } = useThemeApp()
 
-	const [tasks, setTasks] = usePersistedState<TaskParams[]>('@TodoApp.tasks', initialTasks)
+	const [tasks, setTasks] = usePersistedState<TaskParams[]>('@TodoApp.tasks', [])
 
 	const [filteredTasks, setFilteredTasks] = useState<TaskParams[]>(tasks)
 	const [filter, setFilter] = useState<Filter>('all')
