@@ -1,5 +1,7 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, ReactNode, useContext } from "react";
 import { DefaultTheme } from "styled-components";
+
+import { usePersistedState } from "../hooks/usePersistedState";
 
 import dark from "../styles/themes/dark";
 import light from "../styles/themes/light";
@@ -16,7 +18,7 @@ interface ThemeAppProviderProps {
 const ThemeAppContext = createContext({} as ThemeAppContextData)
 
 export function ThemeAppProvider({ children }: ThemeAppProviderProps) {
-	const [theme, setTheme] = useState(light)
+	const [theme, setTheme] = usePersistedState<DefaultTheme>('@TodoApp.theme', light)
 
 	function toggleTheme() {
 		setTheme(theme.title === 'light' ? dark : light)

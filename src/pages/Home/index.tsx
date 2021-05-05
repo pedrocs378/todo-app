@@ -5,6 +5,7 @@ import { Task } from '../../components/Task'
 import { NewTask } from '../../components/NewTask'
 
 import { useThemeApp } from '../../contexts/ThemeAppContext'
+import { usePersistedState } from '../../hooks/usePersistedState'
 
 import imgBackgroundLight from '../../assets/bg-mobile-light.jpg'
 import imgBackgroundDark from '../../assets/bg-mobile-dark.jpg'
@@ -21,7 +22,6 @@ import {
 	FilterButton,
 	TipText,
 } from './styles'
-import { usePersistedState } from '../../hooks/usePersistedState'
 
 type Filter = 'all' | 'active' | 'completed'
 
@@ -74,7 +74,6 @@ export function Home({ onChangeTheme }: HomeProps) {
 
 	function handleToggleTheme() {
 		toggleTheme()
-		onChangeTheme && onChangeTheme(theme)
 	}
 
 	function handleAddNewTask() {
@@ -151,7 +150,7 @@ export function Home({ onChangeTheme }: HomeProps) {
 				<TitleContainer>
 					<h1>Todo</h1>
 
-					<button type="button" onClick={handleToggleTheme}>
+					<button type="button" onClick={toggleTheme}>
 						<img src={themeTitle === 'light' ? moonIcon : sunIcon} alt="Theme" />
 					</button>
 				</TitleContainer>
