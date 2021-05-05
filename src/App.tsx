@@ -1,10 +1,16 @@
+import { ThemeProvider } from 'styled-components'
 
-function App() {
+import light from './styles/themes/light'
+import { Home } from './pages/Home';
+
+import GlobalStyles from './styles/global'
+
+export function App() {
   return (
-    <div>
-      TESTE
-    </div>
+    <ThemeProvider theme={light}>
+      <Home />
+
+      <GlobalStyles />
+    </ThemeProvider>
   );
 }
-
-export default App;
