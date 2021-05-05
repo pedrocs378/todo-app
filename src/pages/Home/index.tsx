@@ -1,4 +1,4 @@
-import { useCallback, useContext, useMemo, useState } from 'react'
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { DefaultTheme, ThemeContext } from 'styled-components'
 
 import { Task } from '../../components/Task'
@@ -21,6 +21,8 @@ import {
 	FilterButton,
 	TipText,
 } from './styles'
+
+type Filter = 'all' | 'active' | 'completed'
 
 interface TaskParams {
 	id: string
@@ -60,6 +62,8 @@ export function Home({ onChangeTheme }: HomeProps) {
 	const { theme, toggleTheme } = useThemeApp()
 
 	const [tasks, setTasks] = useState<TaskParams[]>(initialTasks)
+	const [filteredTasks, setFilteredTasks] = useState<TaskParams[]>(tasks)
+	const [filter, setFilter] = useState<Filter>('all')
 	const [newTask, setNewTask] = useState<TaskParams>({
 		id: String(Math.random()),
 		isCompleted: false,
@@ -110,6 +114,27 @@ export function Home({ onChangeTheme }: HomeProps) {
 		return tasks.filter(task => !task.isCompleted).length
 	}, [tasks])
 
+	useEffect(() => {
+		switch (filter) {
+			case 'all':
+				setFilteredTasks(tasks)
+				break;
+			case 'active':
+				const tasksActived = tasks.filter(task => !task.isCompleted)
+
+				setFilteredTasks(tasksActived)
+				break;
+			case 'completed':
+				const tasksCompleted = tasks.filter(task => task.isCompleted)
+
+				setFilteredTasks(tasksCompleted)
+				break;
+			default:
+				setFilteredTasks(tasks)
+				break;
+		}
+	}, [filter, tasks])
+
 	return (
 		<Container>
 			<img src={themeTitle === 'light' ? imgBackgroundLight : imgBackgroundDark} alt="Background" />
@@ -132,7 +157,7 @@ export function Home({ onChangeTheme }: HomeProps) {
 				/>
 
 				<Tasks>
-					{tasks.map(task => (
+					{filteredTasks.map(task => (
 						<Task
 							key={task.id}
 							task={task}
@@ -151,13 +176,22 @@ export function Home({ onChangeTheme }: HomeProps) {
 				</Tasks>
 
 				<TaskFilters>
-					<FilterButton isSelected={true}>
+					<FilterButton
+						isSelected={filter === 'all'}
+						onClick={() => setFilter('all')}
+					>
 						All
 					</FilterButton>
-					<FilterButton isSelected={false}>
+					<FilterButton
+						isSelected={filter === 'active'}
+						onClick={() => setFilter('active')}
+					>
 						Active
 					</FilterButton>
-					<FilterButton isSelected={false}>
+					<FilterButton
+						isSelected={filter === 'completed'}
+						onClick={() => setFilter('completed')}
+					>
 						Completed
 					</FilterButton>
 				</TaskFilters>
