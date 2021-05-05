@@ -29,6 +29,7 @@ export const TitleContainer = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	margin-bottom: 3rem;
 
 	h1 {
 		text-transform: uppercase;
@@ -49,7 +50,7 @@ export const TitleContainer = styled.div`
 `
 
 export const Tasks = styled.div`
-	margin-top: 2rem;
+	margin-top: 1rem;
 	border-radius: 5px;
 	background: ${props => props.theme.colors.shape};
 	width: 100%;

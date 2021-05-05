@@ -2,6 +2,7 @@ import { useCallback, useContext, useState } from 'react'
 import { DefaultTheme, ThemeContext } from 'styled-components'
 
 import { Task } from '../../components/Task'
+import { NewTask } from '../../components/NewTask'
 
 import { useThemeApp } from '../../contexts/ThemeAppContext'
 
@@ -59,10 +60,29 @@ export function Home({ onChangeTheme }: HomeProps) {
 	const { theme, toggleTheme } = useThemeApp()
 
 	const [tasks, setTasks] = useState<TaskParams[]>(initialTasks)
+	const [newTask, setNewTask] = useState<TaskParams>({
+		id: String(Math.random()),
+		isCompleted: false,
+		title: ''
+	})
 
 	function handleToggleTheme() {
 		toggleTheme()
 		onChangeTheme && onChangeTheme(theme)
+	}
+
+	function handleAddNewTask() {
+		if (!newTask.title.trim()) {
+			return
+		}
+
+		setTasks([...tasks, newTask])
+
+		setNewTask({
+			id: String(Math.random()),
+			isCompleted: false,
+			title: ''
+		})
 	}
 
 	const handleToggleTask = useCallback((id: string) => {
@@ -98,8 +118,16 @@ export function Home({ onChangeTheme }: HomeProps) {
 						<img src={themeTitle === 'light' ? moonIcon : sunIcon} alt="Theme" />
 					</button>
 				</TitleContainer>
-				<Tasks>
 
+				<NewTask
+					value={newTask.title}
+					isCompleted={newTask.isCompleted}
+					onChangeTaskComplete={() => setNewTask({ ...newTask, isCompleted: !newTask.isCompleted })}
+					onChange={event => setNewTask({ ...newTask, title: event.target.value })}
+					onSubmit={handleAddNewTask}
+				/>
+
+				<Tasks>
 					{tasks.map(task => (
 						<Task
 							key={task.id}
@@ -116,8 +144,8 @@ export function Home({ onChangeTheme }: HomeProps) {
 							Clear Completed
 						</button>
 					</TasksFooter>
-
 				</Tasks>
+
 				<TaskFilters>
 					<FilterButton isSelected={true}>
 						All
