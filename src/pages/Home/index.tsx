@@ -21,6 +21,7 @@ import {
 	FilterButton,
 	TipText,
 } from './styles'
+import { usePersistedState } from '../../hooks/usePersistedState'
 
 type Filter = 'all' | 'active' | 'completed'
 
@@ -61,7 +62,8 @@ export function Home({ onChangeTheme }: HomeProps) {
 	const { title: themeTitle } = useContext(ThemeContext)
 	const { theme, toggleTheme } = useThemeApp()
 
-	const [tasks, setTasks] = useState<TaskParams[]>(initialTasks)
+	const [tasks, setTasks] = usePersistedState<TaskParams[]>('@TodoApp.tasks', initialTasks)
+
 	const [filteredTasks, setFilteredTasks] = useState<TaskParams[]>(tasks)
 	const [filter, setFilter] = useState<Filter>('all')
 	const [newTask, setNewTask] = useState<TaskParams>({
