@@ -25,6 +25,7 @@ export function Task({ task, onChange, onDelete }: TaskProps) {
 		>
 			<RadioButton
 				id={task.id}
+				isSelected={task.isCompleted}
 				checked={task.isCompleted}
 				onClick={() => onChange && onChange()}
 			/>

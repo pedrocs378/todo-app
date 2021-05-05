@@ -22,6 +22,7 @@ export function NewTask({ isCompleted, onSubmit, onChangeTaskComplete, ...rest }
 	return (
 		<Container onSubmit={handleSubmit}>
 			<RadioButton
+				isSelected={isCompleted}
 				checked={isCompleted}
 				onClick={() => onChangeTaskComplete()}
 			/>

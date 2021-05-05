@@ -4,16 +4,15 @@ import { FaCheck } from 'react-icons/fa'
 import { Container } from './styles'
 
 interface RadioButtonProps extends InputHTMLAttributes<HTMLInputElement> {
-	checked: boolean
+	isSelected: boolean
 }
 
-export function RadioButton({ checked, ...rest }: RadioButtonProps) {
+export function RadioButton({ isSelected, ...rest }: RadioButtonProps) {
 
 	return (
-		<Container isSelected={checked}>
+		<Container isSelected={isSelected}>
 			<input
 				type="radio"
-				checked={checked}
 				{...rest}
 			/>
 			<span>
