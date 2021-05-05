@@ -28,6 +28,7 @@ export function Task({ task, onChange, onDelete }: TaskProps) {
 				isSelected={task.isCompleted}
 				checked={task.isCompleted}
 				onClick={() => onChange && onChange()}
+				onChange={() => onChange && onChange()}
 			/>
 
 			{task.title}

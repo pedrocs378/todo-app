@@ -5,19 +5,19 @@ import { Container } from './styles'
 
 interface RadioButtonProps extends InputHTMLAttributes<HTMLInputElement> {
 	isSelected: boolean
+	id?: string | undefined
 }
 
-export function RadioButton({ isSelected, ...rest }: RadioButtonProps) {
+export function RadioButton({ isSelected, id, ...rest }: RadioButtonProps) {
 
 	return (
-		<Container isSelected={isSelected}>
+		<Container htmlFor={id} isSelected={isSelected}>
 			<input
+				id={id}
 				type="radio"
 				{...rest}
 			/>
-			<span>
-				<FaCheck />
-			</span>
+			<FaCheck />
 		</Container>
 	)
 }

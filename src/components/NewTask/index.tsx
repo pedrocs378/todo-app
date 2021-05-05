@@ -25,6 +25,7 @@ export function NewTask({ isCompleted, onSubmit, onChangeTaskComplete, ...rest }
 				isSelected={isCompleted}
 				checked={isCompleted}
 				onClick={() => onChangeTaskComplete()}
+				onChange={() => { }}
 			/>
 
 			<input

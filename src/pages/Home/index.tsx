@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from 'react'
+import { useCallback, useContext, useMemo, useState } from 'react'
 import { DefaultTheme, ThemeContext } from 'styled-components'
 
 import { Task } from '../../components/Task'
@@ -106,6 +106,10 @@ export function Home({ onChangeTheme }: HomeProps) {
 		setTasks(tasksUpdated)
 	}, [tasks])
 
+	const itemsLeft = useMemo(() => {
+		return tasks.filter(task => !task.isCompleted).length
+	}, [tasks])
+
 	return (
 		<Container>
 			<img src={themeTitle === 'light' ? imgBackgroundLight : imgBackgroundDark} alt="Background" />
@@ -138,7 +142,7 @@ export function Home({ onChangeTheme }: HomeProps) {
 					))}
 
 					<TasksFooter>
-						<p>{tasks.length} items left</p>
+						<p>{itemsLeft} items left</p>
 
 						<button type="button">
 							Clear Completed
