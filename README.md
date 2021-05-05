@@ -1,4 +1,4 @@
-# Frontend Mentor - Todo app solution
+# # ToDo app - Frontend Mentor
 
 ## :rocket: Tecnologias
 
