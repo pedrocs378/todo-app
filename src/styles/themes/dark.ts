@@ -1,4 +1,4 @@
-export default {
+const dark = {
 	title: 'dark',
 
 	colors: {
@@ -10,3 +10,5 @@ export default {
 		complements: '#4d5066',
 	}
 }
+
+export default dark

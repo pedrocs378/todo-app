@@ -1,10 +1,12 @@
+import { useCallback, useContext, useState } from 'react'
 import { DefaultTheme, ThemeContext } from 'styled-components'
-import { FaCheck } from 'react-icons/fa'
-import { FiX } from 'react-icons/fi'
+
+import { Task } from '../../components/Task'
 
 import { useThemeApp } from '../../contexts/ThemeAppContext'
 
 import imgBackgroundLight from '../../assets/bg-mobile-light.jpg'
+import imgBackgroundDark from '../../assets/bg-mobile-dark.jpg'
 import moonIcon from '../../assets/icon-moon.svg'
 import sunIcon from '../../assets/icon-sun.svg'
 
@@ -13,30 +15,81 @@ import {
 	Content,
 	TitleContainer,
 	Tasks,
-	Task,
 	TasksFooter,
 	TaskFilters,
 	FilterButton,
 	TipText,
 } from './styles'
-import { useContext } from 'react'
+
+interface TaskParams {
+	id: string
+	title: string
+	isCompleted: boolean
+}
 
 interface HomeProps {
 	onChangeTheme?: (theme: DefaultTheme) => void
 }
 
+const initialTasks = [
+	{
+		id: String(Math.random()),
+		title: 'Read for 1 hour',
+		isCompleted: true,
+	},
+	{
+		id: String(Math.random()),
+		title: 'Pick up graceries',
+		isCompleted: false,
+	},
+	{
+		id: String(Math.random()),
+		title: '10 minutes meditation',
+		isCompleted: true,
+	},
+	{
+		id: String(Math.random()),
+		title: 'Study React',
+		isCompleted: false,
+	},
+]
+
 export function Home({ onChangeTheme }: HomeProps) {
 	const { title: themeTitle } = useContext(ThemeContext)
 	const { theme, toggleTheme } = useThemeApp()
+
+	const [tasks, setTasks] = useState<TaskParams[]>(initialTasks)
 
 	function handleToggleTheme() {
 		toggleTheme()
 		onChangeTheme && onChangeTheme(theme)
 	}
 
+	const handleToggleTask = useCallback((id: string) => {
+		const tasksUpdated = tasks.map(task => {
+			if (task.id === id) {
+				return {
+					...task,
+					isCompleted: !task.isCompleted
+				}
+			}
+
+			return task
+		})
+
+		setTasks(tasksUpdated)
+	}, [tasks])
+
+	const handleDeleteTask = useCallback((id: string) => {
+		const tasksUpdated = tasks.filter(task => task.id !== id)
+
+		setTasks(tasksUpdated)
+	}, [tasks])
+
 	return (
 		<Container>
-			<img src={imgBackgroundLight} alt="Background" />
+			<img src={themeTitle === 'light' ? imgBackgroundLight : imgBackgroundDark} alt="Background" />
+
 			<Content>
 				<TitleContainer>
 					<h1>Todo</h1>
@@ -46,48 +99,24 @@ export function Home({ onChangeTheme }: HomeProps) {
 					</button>
 				</TitleContainer>
 				<Tasks>
-					<Task htmlFor="task-radio" isSelected={true}>
-						<div>
-							<input type="radio" id="task-radio" />
-							<span>
-								<FaCheck />
-							</span>
-						</div>
-						10 minutes meditation
-						<button type="button">
-							<FiX />
-						</button>
-					</Task>
-					<Task htmlFor="task-radio" isSelected={false}>
-						<div>
-							<input type="radio" id="task-radio" />
-							<span>
-								<FaCheck />
-							</span>
-						</div>
-						Read for 1 hour
-						<button type="button">
-							<FiX />
-						</button>
-					</Task>
-					<Task htmlFor="task-radio" isSelected={false}>
-						<div>
-							<input type="radio" id="task-radio" />
-							<span>
-								<FaCheck />
-							</span>
-						</div>
-						Pick up graceries
-						<button type="button">
-							<FiX />
-						</button>
-					</Task>
+
+					{tasks.map(task => (
+						<Task
+							key={task.id}
+							task={task}
+							onChange={() => handleToggleTask(task.id)}
+							onDelete={() => handleDeleteTask(task.id)}
+						/>
+					))}
+
 					<TasksFooter>
-						<p>5 items left</p>
+						<p>{tasks.length} items left</p>
+
 						<button type="button">
 							Clear Completed
 						</button>
 					</TasksFooter>
+
 				</Tasks>
 				<TaskFilters>
 					<FilterButton isSelected={true}>
