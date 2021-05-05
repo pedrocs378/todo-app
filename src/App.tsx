@@ -1,16 +1,26 @@
-import { ThemeProvider } from 'styled-components'
+import { useState } from 'react';
+import { DefaultTheme, ThemeProvider } from 'styled-components';
+import { ThemeAppProvider } from './contexts/ThemeAppContext';
 
-import light from './styles/themes/light'
 import { Home } from './pages/Home';
 
 import GlobalStyles from './styles/global'
+import light from './styles/themes/light';
 
 export function App() {
-  return (
-    <ThemeProvider theme={light}>
-      <Home />
+  const [currentTheme, setCurrentTheme] = useState(light)
 
-      <GlobalStyles />
+  function handleChangeTheme(theme: DefaultTheme) {
+    setCurrentTheme(theme)
+  }
+
+  return (
+    <ThemeProvider theme={currentTheme}>
+      <ThemeAppProvider>
+        <Home onChangeTheme={handleChangeTheme} />
+
+        <GlobalStyles />
+      </ThemeAppProvider>
     </ThemeProvider>
   );
 }

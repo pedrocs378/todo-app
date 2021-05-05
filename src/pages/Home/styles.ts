@@ -53,7 +53,7 @@ export const Tasks = styled.div`
 	border-radius: 5px;
 	background: ${props => props.theme.colors.shape};
 	width: 100%;
-	box-shadow: 0 3px 15px 0px ${props => props.theme.colors.complements};
+	box-shadow: 0 3px 15px ${props => props.theme.title === 'light' && props.theme.colors.complements};
 `
 
 export const Task = styled.label<TaskProps>`
@@ -88,6 +88,16 @@ export const Task = styled.label<TaskProps>`
 			border-radius: 10px;
 			border: 1px solid ${props => props.theme.colors.complements};
 			background: ${({ isSelected }) => isSelected ? 'var(--radio-background)' : 'transparent'};
+		
+			svg {
+				height: 9px;
+				width: 9px;
+				color: #fff;
+
+				${({ isSelected }) => !isSelected && css`
+					display: none;
+				`}
+			}
 		}
 	}
 
@@ -99,7 +109,7 @@ export const Task = styled.label<TaskProps>`
 		svg {
 			height: 22px;
 			width: 22px;
-			color: ${props => props.theme.colors.text};
+			color: ${props => props.theme.colors.complements};
 		}
 	}
 `
@@ -128,7 +138,7 @@ export const TaskFilters = styled.div`
 	border-radius: 5px;
 	padding: 1.5rem 0;
 	background: ${props => props.theme.colors.shape};
-	box-shadow: 0 3px 15px 0px ${props => props.theme.colors.complements};
+	box-shadow: 0 3px 10px ${props => props.theme.title === 'light' && props.theme.colors.complements};
 
 	display: flex;
 	align-items: center;
@@ -144,4 +154,13 @@ export const FilterButton = styled.button<FilterButtonProps>`
 	& + button {
 		margin-left: 1rem;
 	}
+`
+
+export const TipText = styled.span`
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	margin-top: 4rem;
+	color: ${props => props.theme.colors.text};
 `

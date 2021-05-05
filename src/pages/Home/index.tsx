@@ -1,8 +1,12 @@
+import { DefaultTheme, ThemeContext } from 'styled-components'
 import { FaCheck } from 'react-icons/fa'
 import { FiX } from 'react-icons/fi'
 
+import { useThemeApp } from '../../contexts/ThemeAppContext'
+
 import imgBackgroundLight from '../../assets/bg-mobile-light.jpg'
 import moonIcon from '../../assets/icon-moon.svg'
+import sunIcon from '../../assets/icon-sun.svg'
 
 import {
 	Container,
@@ -13,9 +17,22 @@ import {
 	TasksFooter,
 	TaskFilters,
 	FilterButton,
+	TipText,
 } from './styles'
+import { useContext } from 'react'
 
-export function Home() {
+interface HomeProps {
+	onChangeTheme?: (theme: DefaultTheme) => void
+}
+
+export function Home({ onChangeTheme }: HomeProps) {
+	const { title: themeTitle } = useContext(ThemeContext)
+	const { theme, toggleTheme } = useThemeApp()
+
+	function handleToggleTheme() {
+		toggleTheme()
+		onChangeTheme && onChangeTheme(theme)
+	}
 
 	return (
 		<Container>
@@ -24,8 +41,8 @@ export function Home() {
 				<TitleContainer>
 					<h1>Todo</h1>
 
-					<button type="button">
-						<img src={moonIcon} alt="Moon" />
+					<button type="button" onClick={handleToggleTheme}>
+						<img src={themeTitle === 'light' ? moonIcon : sunIcon} alt="Theme" />
 					</button>
 				</TitleContainer>
 				<Tasks>
@@ -33,7 +50,7 @@ export function Home() {
 						<div>
 							<input type="radio" id="task-radio" />
 							<span>
-								<FaCheck color="#fff" size={9} />
+								<FaCheck />
 							</span>
 						</div>
 						10 minutes meditation
@@ -45,7 +62,7 @@ export function Home() {
 						<div>
 							<input type="radio" id="task-radio" />
 							<span>
-								<FaCheck color="#fff" size={9} />
+								<FaCheck />
 							</span>
 						</div>
 						Read for 1 hour
@@ -57,7 +74,7 @@ export function Home() {
 						<div>
 							<input type="radio" id="task-radio" />
 							<span>
-								<FaCheck color="#fff" size={9} />
+								<FaCheck />
 							</span>
 						</div>
 						Pick up graceries
@@ -83,6 +100,8 @@ export function Home() {
 						Completed
 					</FilterButton>
 				</TaskFilters>
+
+				<TipText>Drag and drop to reorder list</TipText>
 			</Content>
 		</Container>
 	)
