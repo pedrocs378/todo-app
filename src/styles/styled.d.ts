@@ -7,10 +7,11 @@ declare module 'styled-components' {
 		colors: {
 			background: string
 			shape: string
-			placeholder: string
 			heading: string
+			headingHover: string
 			text: string
 			complements: string
+			complementsSecondary: string
 		}
 	}
 }

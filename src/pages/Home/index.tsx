@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { DefaultTheme, ThemeContext } from 'styled-components'
+import { ThemeContext } from 'styled-components'
 
 import { Task } from '../../components/Task'
 import { NewTask } from '../../components/NewTask'
@@ -7,13 +7,12 @@ import { NewTask } from '../../components/NewTask'
 import { useThemeApp } from '../../contexts/ThemeAppContext'
 import { usePersistedState } from '../../hooks/usePersistedState'
 
-import imgBackgroundLight from '../../assets/bg-mobile-light.jpg'
-import imgBackgroundDark from '../../assets/bg-mobile-dark.jpg'
 import moonIcon from '../../assets/icon-moon.svg'
 import sunIcon from '../../assets/icon-sun.svg'
 
 import {
 	Container,
+	Header,
 	Content,
 	TitleContainer,
 	Tasks,
@@ -29,10 +28,6 @@ interface TaskParams {
 	id: string
 	title: string
 	isCompleted: boolean
-}
-
-interface HomeProps {
-	onChangeTheme?: (theme: DefaultTheme) => void
 }
 
 const initialTasks = [
@@ -58,9 +53,9 @@ const initialTasks = [
 	},
 ]
 
-export function Home({ onChangeTheme }: HomeProps) {
+export function Home() {
 	const { title: themeTitle } = useContext(ThemeContext)
-	const { theme, toggleTheme } = useThemeApp()
+	const { toggleTheme } = useThemeApp()
 
 	const [tasks, setTasks] = usePersistedState<TaskParams[]>('@TodoApp.tasks', initialTasks)
 
@@ -71,10 +66,6 @@ export function Home({ onChangeTheme }: HomeProps) {
 		isCompleted: false,
 		title: ''
 	})
-
-	function handleToggleTheme() {
-		toggleTheme()
-	}
 
 	function handleAddNewTask() {
 		if (!newTask.title.trim()) {
@@ -109,13 +100,13 @@ export function Home({ onChangeTheme }: HomeProps) {
 		})
 
 		setTasks(tasksUpdated)
-	}, [tasks])
+	}, [tasks, setTasks])
 
 	const handleDeleteTask = useCallback((id: string) => {
 		const tasksUpdated = tasks.filter(task => task.id !== id)
 
 		setTasks(tasksUpdated)
-	}, [tasks])
+	}, [tasks, setTasks])
 
 	const itemsLeft = useMemo(() => {
 		return tasks.filter(task => !task.isCompleted).length
@@ -144,7 +135,7 @@ export function Home({ onChangeTheme }: HomeProps) {
 
 	return (
 		<Container>
-			<img src={themeTitle === 'light' ? imgBackgroundLight : imgBackgroundDark} alt="Background" />
+			<Header isDark={themeTitle === 'dark'} />
 
 			<Content>
 				<TitleContainer>
@@ -175,6 +166,27 @@ export function Home({ onChangeTheme }: HomeProps) {
 
 					<TasksFooter>
 						<p>{itemsLeft} items left</p>
+
+						<div>
+							<FilterButton
+								isSelected={filter === 'all'}
+								onClick={() => setFilter('all')}
+							>
+								All
+							</FilterButton>
+							<FilterButton
+								isSelected={filter === 'active'}
+								onClick={() => setFilter('active')}
+							>
+								Active
+							</FilterButton>
+							<FilterButton
+								isSelected={filter === 'completed'}
+								onClick={() => setFilter('completed')}
+							>
+								Completed
+							</FilterButton>
+						</div>
 
 						<button type="button" onClick={handleClearCompletedTasks}>
 							Clear Completed

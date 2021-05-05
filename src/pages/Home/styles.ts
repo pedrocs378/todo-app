@@ -1,7 +1,14 @@
 import styled, { css } from 'styled-components'
+import { shade, setLightness } from 'polished'
 
-interface TaskProps {
-	isSelected: boolean
+import imgBackgroundMobileLight from '../../assets/bg-mobile-light.jpg'
+import imgBackgroundMobileDark from '../../assets/bg-mobile-dark.jpg'
+
+import imgBackgroundDesktopLight from '../../assets/bg-desktop-light.jpg'
+import imgBackgroundDesktopDark from '../../assets/bg-desktop-dark.jpg'
+
+interface HeaderProps {
+	isDark: boolean
 }
 
 interface FilterButtonProps {
@@ -12,17 +19,43 @@ export const Container = styled.div`
 	max-width: 1440px;
 	margin: 0 auto;
 	position: relative;
-	
-	img {
-		width: 100%;
+`
+
+const showBackgroundDesktopLight = css`
+	background: url(${imgBackgroundDesktopLight});
+`
+
+const showBackgroundDesktopDark = css`
+	background: url(${imgBackgroundDesktopDark});
+`
+
+export const Header = styled.header<HeaderProps>`
+	width: 100%;
+	height: 200px;
+	background: url(${({ isDark }) => isDark ? imgBackgroundMobileDark : imgBackgroundMobileLight});
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center;
+
+	@media (min-width: 600px) {
+		height: 300px;
+
+		${({ isDark }) => isDark ? showBackgroundDesktopDark : showBackgroundDesktopLight}
 	}
 `
 
 export const Content = styled.main`
 	width: 100%;
+	max-width: 600px;
 	padding: 0 2rem;
 	position: absolute;
 	top: 50px;
+	left: 50%;
+	transform: translateX(-50%);
+
+	@media (min-width: 600px) {
+		top: 7rem;	
+	}
 `
 
 export const TitleContainer = styled.div`
@@ -54,65 +87,9 @@ export const Tasks = styled.div`
 	border-radius: 5px;
 	background: ${props => props.theme.colors.shape};
 	width: 100%;
-	box-shadow: 0 3px 15px ${props => props.theme.title === 'light' && props.theme.colors.complements};
-`
-
-export const Task = styled.label<TaskProps>`
-	display: flex;
-	align-items: center;
-
-	padding: 1.25rem;
-	border-bottom: 1px solid ${props => props.theme.colors.complements};
-	color: ${props => props.theme.colors.heading};
-	font-weight: 400;
-	font-size: 1rem;
-
-	${({ isSelected }) => isSelected && css`
-		text-decoration: line-through;
-		color: ${props => props.theme.colors.placeholder};
-	`}
-
-	div {
-		margin-right: 0.8rem;
-
-		input {
-			display: none;
-		}
-
-		span {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-
-			height: 20px;
-			width: 20px;
-			border-radius: 10px;
-			border: 1px solid ${props => props.theme.colors.complements};
-			background: ${({ isSelected }) => isSelected ? 'var(--radio-background)' : 'transparent'};
-		
-			svg {
-				height: 9px;
-				width: 9px;
-				color: #fff;
-
-				${({ isSelected }) => !isSelected && css`
-					display: none;
-				`}
-			}
-		}
-	}
-
-	> button {
-		margin-left: auto;
-		background: transparent;
-		border: 0;
-
-		svg {
-			height: 22px;
-			width: 22px;
-			color: ${props => props.theme.colors.complements};
-		}
-	}
+	box-shadow: 0 3px 10px ${props => {
+		return shade(props.theme.title === 'light' ? 0.1 : 0.5, props.theme.colors.shape)
+	}};
 `
 
 export const TasksFooter = styled.div`
@@ -120,17 +97,37 @@ export const TasksFooter = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	font-size: 0.85rem;
 
 	p {
-		font-size: 0.85rem;
 		color: ${props => props.theme.colors.text};
 	}
 
-	button {
+	div {
+		display: none;
+	}
+
+	> button {
 		background: transparent;
 		border: 0;
-		font-size: 0.85rem;
 		color: ${props => props.theme.colors.text};
+	}
+
+	@media (min-width: 600px) {
+		padding: 1rem 1.25rem;
+		font-size: 0.75rem;
+
+		div {
+			display: block;
+		}
+
+		> button {
+			transition: color 0.2s;
+
+			&:hover {
+				color: ${({ theme }) => theme.title === 'light' ? shade(0.4, theme.colors.text) : setLightness(0.9, theme.colors.text)};
+			}
+		}
 	}
 `
 
@@ -139,11 +136,17 @@ export const TaskFilters = styled.div`
 	border-radius: 5px;
 	padding: 1.5rem 0;
 	background: ${props => props.theme.colors.shape};
-	box-shadow: 0 3px 10px ${props => props.theme.title === 'light' && props.theme.colors.complements};
+	box-shadow: 0 3px 10px ${props => {
+		return shade(props.theme.title === 'light' ? 0.2 : 0.5, props.theme.colors.shape)
+	}};
 
 	display: flex;
 	align-items: center;
 	justify-content: center;
+
+	@media (min-width: 600px) {
+		display: none;
+	}
 `
 
 export const FilterButton = styled.button<FilterButtonProps>`
@@ -155,6 +158,15 @@ export const FilterButton = styled.button<FilterButtonProps>`
 	& + button {
 		margin-left: 1rem;
 	}
+
+	@media (min-width: 600px) {
+		font-size: 0.8rem;
+		transition: color 0.2s;
+
+		&:hover {
+			color: ${({ isSelected, theme }) => isSelected ? shade(0.2, '#3a7bfd') : theme.title === 'light' ? shade(0.4, theme.colors.text) : setLightness(0.9, theme.colors.text)};
+		}
+	}
 `
 
 export const TipText = styled.span`
@@ -164,4 +176,9 @@ export const TipText = styled.span`
 
 	margin-top: 4rem;
 	color: ${props => props.theme.colors.text};
+
+	@media (min-width: 600px) {
+		margin-top: 3.5rem;
+		font-size: 0.8rem;
+	}
 `
