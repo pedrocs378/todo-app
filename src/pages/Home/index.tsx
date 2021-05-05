@@ -89,6 +89,12 @@ export function Home({ onChangeTheme }: HomeProps) {
 		})
 	}
 
+	function handleClearCompletedTasks() {
+		const tasksUpdated = tasks.filter(task => !task.isCompleted)
+
+		setTasks(tasksUpdated)
+	}
+
 	const handleToggleTask = useCallback((id: string) => {
 		const tasksUpdated = tasks.map(task => {
 			if (task.id === id) {
@@ -169,7 +175,7 @@ export function Home({ onChangeTheme }: HomeProps) {
 					<TasksFooter>
 						<p>{itemsLeft} items left</p>
 
-						<button type="button">
+						<button type="button" onClick={handleClearCompletedTasks}>
 							Clear Completed
 						</button>
 					</TasksFooter>
