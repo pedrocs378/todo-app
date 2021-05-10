@@ -1,5 +1,9 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ThemeContext } from 'styled-components'
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
+import { TouchBackend } from 'react-dnd-touch-backend'
+import update from "immutability-helper"
 
 import { Task } from '../../components/Task'
 import { NewTask } from '../../components/NewTask'
@@ -29,6 +33,16 @@ interface TaskParams {
 	title: string
 	isCompleted: boolean
 }
+
+const isTouchDevice = () => {
+	if ("ontouchstart" in window) {
+		return true
+	}
+
+	return false
+}
+
+const backendForDND = isTouchDevice() ? TouchBackend : HTML5Backend
 
 export function Home() {
 	const { title: themeTitle } = useContext(ThemeContext)
@@ -63,6 +77,16 @@ export function Home() {
 
 		setTasks(tasksUpdated)
 	}
+
+	const handleMoveTask = useCallback((dragIndex: number, hoverIndex: number) => {
+		const draggedTask = tasks[dragIndex]
+
+		setTasks(
+			update(tasks, {
+				$splice: [[dragIndex, 1], [hoverIndex, 0, draggedTask]]
+			})
+		)
+	}, [tasks, setTasks])
 
 	const handleToggleTask = useCallback((id: string) => {
 		const tasksUpdated = tasks.map(task => {
@@ -132,14 +156,18 @@ export function Home() {
 				/>
 
 				<Tasks>
-					{filteredTasks.map(task => (
-						<Task
-							key={task.id}
-							task={task}
-							onChange={() => handleToggleTask(task.id)}
-							onDelete={() => handleDeleteTask(task.id)}
-						/>
-					))}
+					<DndProvider backend={backendForDND}>
+						{filteredTasks.map((task, index) => (
+							<Task
+								key={task.id}
+								index={index}
+								task={task}
+								onChange={() => handleToggleTask(task.id)}
+								onDelete={() => handleDeleteTask(task.id)}
+								onMoveTask={handleMoveTask}
+							/>
+						))}
+					</DndProvider>
 
 					<TasksFooter>
 						<p>{itemsLeft} items left</p>
